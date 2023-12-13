@@ -1,0 +1,60 @@
+x1 = np.linspace(-5.0, 5.0, 100)
+y1 = np.sqrt(5*2 - x1*2)
+y1=np.hstack([y1,-y1])
+x1=np.hstack([x1,-x1])
+#plt.plot(y1)
+x1 = np.linspace(-5.0, 5.0, 100)
+y1 = np.sqrt(5*2 - x1*2)
+y1=np.hstack([y1,-y1])
+x1=np.hstack([x1,-x1])
+#plt.plot(y1)
+plt.scatter(y,x)
+plt.scatter(y1,x1)
+mport pandas as pd
+df1 =pd.DataFrame(np.vstack([y,x]).T,columns=['X1','X2'])
+df1['Y']=0
+df2 =pd.DataFrame(np.vstack([y1,x1]).T,columns=['X1','X2'])
+df2['Y']=1
+df = df1._append(df2)
+df.head(5)
+#plt.plot(df2)
+### Independent and Dependent features
+X = df.iloc[:, :2]  
+y = df.Y
+#plt.plot(y)
+y
+## Split the dataset into train and test
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.25,random_state=0)
+y_train
+from sklearn.svm import SVC
+classifier=SVC(kernel="linear")
+classifier.fit(X_train,y_train)
+df.head()
+polynomial kernal
+# We need to find components for the Polynomical Kernel
+#X1,X2,X1_square,X2_square,X1*X2
+df['X1_Square']= df['X1']**2
+df['X2_Square']= df['X2']**2
+df['X1*X2'] = (df['X1'] *df['X2'])
+df.head()
+### Independent and Dependent features
+X = df[['X1','X2','X1_Square','X2_Square','X1*X2']]
+y = df['Y']
+y
+X_train, X_test, y_train, y_test = train_test_split(X, y, 
+                                                    test_size = 0.25, 
+                                                    random_state = 0)
+X_train
+import plotly.express as px
+
+fig = px.scatter_3d(df, x='X1', y='X2', z='X1*X2',
+              color='Y')
+fig.show()
+fig = px.scatter_3d(df, x='X1_Square', y='X1_Square', z='X1*X2',
+              color='Y')
+fig.show()
+classifier = SVC(kernel="linear")
+classifier.fit(X_train, y_train)
+y_pred = classifier.predict(X_test)
+accuracy_score(y_test, y_pred)
